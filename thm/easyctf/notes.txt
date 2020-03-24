@@ -20,4 +20,4 @@ nmap -sV --script vulners --script-args mincvss=5.0 10.10.17.246
 **CVSS is The Common Vulnerability Scoring System is a free and open industry standard for assessing the severity of computer system security vulnerabilities.
 
 vulscan tutorial
-https://securitytrails.com/blog/nmap-vulnerability-scan
+https://github.com/scipag/vulscan
