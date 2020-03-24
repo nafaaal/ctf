@@ -1,0 +1,2 @@
+nmap
+https://null-byte.wonderhowto.com/how-to/easily-detect-cves-with-nmap-scripts-0181925/
