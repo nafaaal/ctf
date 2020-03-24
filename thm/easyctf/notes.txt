@@ -13,3 +13,4 @@ OPEN PORTS
 NSE - Nmap Scripting Engine, has premade scripts to automate a wide variety of networking tasks.
 Eg. nmap-vulners and vulscan
 nmap --script nmap-vulners,vulscan --script-args vulscandb=scipvuldb.csv -sV -p22 1##.##.###.#21
+nmap -sV --script vulners --script-args mincvss=5.0 10.10.17.246
