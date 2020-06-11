@@ -1,0 +1,147 @@
+ssh
+
+format - <user>@<ip-address>
+ex: root@10.10.249.27
+
+su
+stands for switch user
+su with a username will switch users, empty means root
+ex: su user1
+password prompt would come if neccesary
+
+>
+outputs to a file
+ex: echo hello > file.txt would save the result of echo hello in a file called file.txt
+note: if there currently is a file named file.txt it would be completely erased
+
+>>
+Like commmand >, but instead of re-writing the file it appends to it.
+
+&&
+executes two commands.
+ex: sleep 2 && echo hello
+in this example first it would sleep for 2 seconds and after that echo hello would be executed
+
+& 
+makes it so that a command can be executed while another is going on.
+By default "sleep 10" would wait for 10 seconds, and during this time no other command can be executed,
+however by using "sleep 10 &" it would be possible to execute code during the time the first command is being executed.
+
+$
+This is used to set enviroment variables.
+ex: echo $USER will echo the current user
+To set your own enviroment variable it is just as easy as : "export {varname}={whatchu trying to set}
+
+|
+uses the first command as an input for the second command
+
+assuming there is a file called text.txt with the content "Hello World", executing the command " cat text.txt | grep Hello" would search for the word Hello, from the input given, in this case the concat of text.txt, and as an output would highlight that the word "Hello" is in the file text.txt
+
+;
+just like && but it would work even if the first command is invalid
+
+chmod
+allows you to set permissions for a file and who can control it.
+syntax - chmod <file><permission>
+1	That file can be executed
+2	That file can be written to
+3	That file can be executed and written to
+4	That file can be read
+5	That file can be read and executed
+6	That file can be written to and read
+7	That file can be read, written to, and executed
+
+FILE PERMISSIONS
+
+-rwxrwxrwx .
+
+character 0 tells file type, either file or directory. it is "-" for files and "d" for directories
+after that in each 3 letter group it shows any permissions. 1st 3 letters is for user, next 3 for group and last 3 is for all others.
+
+r is read access
+w is write access
+x is execute access
+- means access denied
+
+rm
+removes file. syntax : "rm <filename>"
+
+mv
+moves file, syntax : "mv <filename> <destination>
+
+cp
+just like mv but it duplciates the file
+
+mkdir
+makes a directory in given location, can use relative or absolute paths
+relative meaning location from where you currently are, absolute path is the path of the directory from / or root
+
+cd
+changes directory, like mkdir supports absolute and relative paths
+
+find
+finds files in current directory (recursively)
+find command is very large and overwhelming and it would be best to read "man find"
+-PERM to find files with specific permissions ex: find -PERM 777 To find files which everyone can read edit and execute.
+flags like -user can also be used to find files of a user ex: "find / -user nafaal"
+
+grep
+syntax - grep <string> <file> (file is optional if using pipe " | " )
+note - multiple files can be searched like "grep <string> <file> <file2>
+for ex in the case of finding the path of a file named helloworld, it would as simple as " find /* | grep helloword ". Here we are passig all the directories and using grep to find the path. Notice that we used pipe to input data from the first operation to the second one
+
+sudo
+man sudo for more details.
+allows user to do task as root (default) if user is in list of sudoers
+
+adding users/groups
+commands to add NEW users and groups:
+sudo adduser <name of user>
+sudo addgroup <name of group>
+note : adduser and addgroup can only be run as root.
+commands to edit users in groups:
+usermod -a -G <groups seperated by commas> <user>
+man usernmod/adduser/addgroup fore more detailed explanation
+
+nano
+Nano is a text editor like vim.
+ex: nano <file you want to edit>
+
+IMPORTANT PATHS
+/etc/passwd - Stores user information - Often used to see all the users on a system
+
+
+/etc/shadow - Has all the passwords of these users
+
+
+/tmp - Every file inside it gets deleted upon shutdown - used for temporary files
+    
+
+/etc/sudoers - Used to control the sudo permissions of every user on the system -
+
+
+/home - The directory where all your downloads, documents etc are. - The equivalent on Windows is C:\Users\<user>
+
+
+/root - The root user's home directory - The equivilent on Windows is C:\Users\Administrator
+
+
+/usr - Where all your software is installed 
+
+
+bin and /sbin - Used for system critical files - DO NOT DELETE
+
+
+/var - The Linux miscellaneous directory, a myriad of processes store data in /var
+    
+
+$PATH - Stores all the binaries you're able to run - same as $PATH on Windows
+$PATH is an environment variable that contains all the binaries you're able to execute. 
+    It is worth noting that the paths in $PATH(hah!) are separated by colons. Every executable file that is in any of those paths you are able to run just by typing the name of the executable instead of the full path.
+
+ps
+ps command will display all the current processes.
+to list all the system process ps -eF can be used
+this will display a list of processes and to stop any process, the command will be "kill<PID of the service>
+
+
