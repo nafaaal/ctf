@@ -1,0 +1,79 @@
+- First we gather information about the machine using nmap.
+
+nmap -sV -sC --open 10.10.30.300 -oN nmap/initial
+-sV Attempts to determine versions of services running
+-sC Scan with default nmap scripts
+--open Shows all open ports
+-oN Save results to a file 
+
+The result of the nmap can be found in nmap/initial
+
+THINGS TO NOTE:
+Webserver is running on port 3333
+
+- Secondly we find directories using GoBuster
+
+gobuster dir -w /usr/share/dirbuster/wordlist.txt -u http://10.10.30.300 >> gobuster/initial
+dir Command to use directory/file bruteforcing mode
+-w Supply wordlist
+-u Supply IP Address
+>> Linux command to append all output in to file (gobuster/initial)
+
+Note: with gobuster we are using a wordlist from dirbuster
+
+From all the directories found we find a page where we can upload files (http://10.10.30.300:3333/internal)
+
+Now we try and find what types of file we can upload. To do this we are doing to use Burp Suite. (Configuration of Burp Suite can be found in Burp Suite Room)
+From that we can find that .php files are being rejected however, phtml files can be uploaded.
+
+Since we have now found out that we can upload phtml files to the website we can use a php-reverse-shell (See notes below) to gain a shell.
+
+Php-Reverse-Shell is a tool is designed for those situations during a pentest where you have upload access to a webserver that’s running PHP.  Upload this script to somewhere in the web root then run it by accessing the appropriate URL in your browser.  The script will open an outbound TCP connection from the webserver to a host and port of your choice.  Bound to this TCP connection will be a shell.
+
+A reverse shell works by being called on the remote host and forcing this host to make a connection to you. So you'll listen for incoming connections, upload and have your shell executed which will beacon out to you to control.
+
+The reverse shell script is found at https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php
+
+Change the file extension to .phtml. ex: php-reverse-shell.phtml, and change the field of IP Address, to the one the host machone has. Ex: 10.10.65.132. Note: By default the port is 1234
+
+Now that it is changed, the file can be uploaded to the website and the script can be run by accessing http://10.10.30.3000:3333/internal/uploads/php-reverse-shell.phtml
+
+But before run our script, we have to spin up a server and listen to the port which we specified in the script, as the script would try to make a connection to out machine (The IP and port we gave), to do that we can use netcat
+
+Command : nc -lvnp 1234
+-l Listen Mode
+-v Verbose Mode
+-n Means only Numeric IP addresses only (No domain names)
+-p Specifies port number 
+
+Note: We are listening to the port we wrote down in the .phtml script. In this case it is 1234.
+
+After runnning the command we will now be listening to port 1234, and now by accessing https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php we can spawn a shell in our terminal where netcat was running.
+
+We can browse through the direcories and can see that /home has a user bill, and the users flag is in this folder.
+
+The last part with PrivEsc is pretty hard, as a rookie and is best explained at https://n0w4n.nl/vulnversity/
+
+Basically it is using SUID to gain root user permissions for a regular user
+
+SUID (Set owner User ID up on execution) is a special type of file permissions given to a file. Normally in Linux/Unix when a program runs, it inherits access permissions from the logged in user. SUID is defined as giving temporary permissions to a user to run a program/file with the permissions of the file owner rather that the user who runs it. In simple words users will get file ownerâ€™s permissions as well as owner UID and GID when executing a file/program/command.
+
+More about SUID here : https://www.linuxnix.com/suid-set-suid-linuxunix/
+
+So we find all the SUID files to see if any could be used. Command:
+find / -perm /4000 2>&1 | grep -v “Permission denied”
+/ Search Everything
+-perm /4000 Search files with SUID type (Note: 4000 is numerical value of SUID bit)
+| Linux command to input first argument's output in to the second command (In this case results of find command into grep command)
+grep -v "Permission Denied" - Output all entries without this string
+2>&1 |: This instruction allows you to tell the shell to make one stream got to the same destination as another stream. In this case, we’re saying “redirect stream 2, stderr, to the same destination that stream 1, stdout, is being redirected to. We then pipe that output into the next command. (Note: This part can be ommited)
+
+And we are left with all SUID type files and we use it for PrivEsc.
+
+The details on how to do it is best written inthe following:
+https://unicornsec.com/home/tryhackme-vulnversity
+
+
+
+
+
