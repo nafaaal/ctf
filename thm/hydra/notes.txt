@@ -1,0 +1,27 @@
+Hydra is a brute force online password cracking tool.
+
+It is able to brute force the following protocols:
+Asterisk, AFP, Cisco AAA, Cisco auth, Cisco enable, CVS, Firebird, FTP,  HTTP-FORM-GET, HTTP-FORM-POST, HTTP-GET, HTTP-HEAD, HTTP-POST, HTTP-PROXY, HTTPS-FORM-GET, HTTPS-FORM-POST, HTTPS-GET, HTTPS-HEAD, HTTPS-POST, HTTP-Proxy, ICQ, IMAP, IRC, LDAP, MS-SQL, MYSQL, NCP, NNTP, Oracle Listener, Oracle SID, Oracle, PC-Anywhere, PCNFS, POP3, POSTGRES, RDP, Rexec, Rlogin, Rsh, RTSP, SAP/R3, SIP, SMB, SMTP, SMTP Enum, SNMP v1+v2+v3, SOCKS5, SSH (v1 and v2), SSHKEY, Subversion, Teamspeak (TS2), Telnet, VMware-Auth, VNC and XMPP.
+
+Most commonly used being HTTP, HTTPS, FTP and SSH
+
+Manual for Hydra can be gotten from the command "man hydra" if hydra is installed.
+
+Hydra is installed by default in Kali, but for other operating systems it needs to be installed. It can be donwloaded from https://github.com/vanhauser-thc/thc-hydra.
+
+The most basic command to brute force credentials in FTP would be : "hydra -l user -P passlist.txt ftp://192.168.0.1" where: 
+-l is to specify single user name (in this case "user")
+-P to pass a dictionary of passwords (note: the path of the wordlist should be entered)
+and then followed by the protocol in which it should brute force with the IP Address
+
+It is similiar for SSH aswell, the command being : "hydra -l <username> -P <full path to pass> <ip> -t 4 ssh" where:
+-t stands for number of threads to be used.
+
+Post Web Forms may look quite difficult but is pretty straightforward once you understand its syntax.
+Command : "hydra -l <username> -P <full path to wordlist> <IP Address> http-post-form "/<URL of login page excluding domain name>:username=^USER^&password=^PASS^:F=incorrect" -V"
+http-post-form indicates the type of form (post)
+^USER^ tells hydra where to put given name
+^PASS^ tells hydra where to put passwords supplied from wordlist
+-V tells to verbose output for every attempt on the CLI
+
+
