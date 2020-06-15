@@ -1,0 +1,42 @@
+nmap is a port-scan tool, gathering information by sending raw packets to system ports. Depending on the information it gets back it classifies ports as being open, closed or filtered. Filtered means that nmap cannot determine whether it is open or closed.
+
+Note that nmap is very loud. Meaning that using nmap is not anonymous, and network administrators will know when such a scan is done.
+
+A basic example of a nmap scan is: (command --> nmap -F scanme.nmap.org)
+
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-06-14 07:28 EDT
+Nmap scan report for scanme.nmap.org (45.33.32.156)
+Host is up (0.084s latency).
+Other addresses for scanme.nmap.org (not scanned): 2600:3c01::f03c:91ff:fe18:bb2f
+Not shown: 92 closed ports
+PORT      STATE    SERVICE
+22/tcp    open     ssh
+25/tcp    filtered smtp
+80/tcp    open     http
+646/tcp   filtered ldp
+1755/tcp  filtered wms
+9100/tcp  filtered jetdirect
+10000/tcp filtered snet-sensor-mgmt
+49154/tcp filtered unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 5.37 seconds
+
+As seen above, ports 22 and 80 are open, while a bunch of others have a status of filtered.
+
+Inthe above example, we have used the flag -F, which stands for fast, which only scans the top 100 ports of the given IP / Domain. By default running nmap without any flags will scan the top 1000 ports only.
+
+The following are some useful flags might be used commonly.
+--open : only shows open ports
+-sV : attempts to determine the sevices versions of any services running on the open ports
+-O : tries to determine the Operating System 
+-F : Scans top 100 port.
+-p : Give a port number or range of ports to scan
+-p- : scan all the ports
+-v : Verbose mode, for displaying output onto terminal
+-sC: Uses default scripting in nmap
+-oN : save output to a normal file (linux >> also works fine)
+-A : Enable OS detection, version detection, script scanning and traceroute
+
+There are still many flags which can be seen in "nmap --help" or more detail in "man nmap"
+
+

