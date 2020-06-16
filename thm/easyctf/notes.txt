@@ -1,7 +1,7 @@
 IP ADDRESS - 10.10.17.246
 
 
-Check all running ports of the given ip, -O (Detects the OS which is running), -sV (Use of safe default scripts for scan)
+Check all running ports of the given ip, -O (Detects the OS which is running), -sV (Determines the versions of services running)
 sudo nmap -sV -O 10.10.17.246
 
 OPEN PORTS
