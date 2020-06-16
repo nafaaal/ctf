@@ -1,0 +1,19 @@
+Advent of Cyber - 16/6/2020
+
+Machine IP - 10.10.55.239
+
+Users made:
+hi
+mcinventory
+
+Cookies are a small piece of data sent to you from a website, that keeps track of your visits and activities.
+
+Cookies can be searched from your web browser by opening Developer Options (F12), and going into the Applications tab. Cookies will be under the section named Storage.
+
+Login Cookies (AuthID) for the users:
+hi : aGl2NGVyOWxsMSFzcw%3D%3D
+mcinventory : bWNpbnZlbnRvcnl2NGVyOWxsMSFzcw%3D%3D
+
+If we decode the cookie using base64, you will get a decrypted message like mcinventoryv4er9ll1!ss or hiv4er9ll1!ss, and when examined, shows the username of the account, along with the string "v4er9ll1!ss", which is the common part.
+
+Please note to remove the string "%3D%3D" as it is not a part of the cookie which can be decoded
