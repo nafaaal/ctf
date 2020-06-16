@@ -7,11 +7,11 @@ Command: nmap -sV -sC -oN nmap/initial 10.10.191.91
 -oN to output to a file (file called initial in this case)
 -sC uses default scripts for nmap.
 This room is specifically about the EternalBlue exploit that was used for the major ransonware known as WannaCry.
-This is done using a bug in the SMB server found by the CIA, but later found out by a hacker hacking into the CIA.
+This is done using a bug in the SMB server found by the NSA, but later leaked by a hacking group know as Shadow Brokers.
 Since this uses a bug in the SMB Server, instead of using the default scripts -sC, a script like smb* can be used. ex:"--script=smb*".
 This will go through all the the scripts within the system to find vulnerbilities within that given script. These scripts can be found in /usr/share/nmap/scripts in kali linux
 
-As mentioned before this room is based about the EternalBlue exploit. This machine is vulnerable to this exploit named ms17-010
+As mentioned before this room is based about the EternalBlue exploit. This machine is vulnerable to this exploit ms17-010
 
 The results of this scan can be found in nmap/initial as previously mentioned and this shows that there is only 3 services running under the port number 1000.
 
@@ -32,7 +32,7 @@ With all of this being said, more information will be availible in the Metasploi
 
 To open metasploit type "mfsconsole" in the terminal. Installed by default in kali. (If its not installed on your device, please install first)
 
-After metasploit runs, search for the exploit, mentioned above. The command to find is "search <name of exploit>" The name of exploit can be its CVE number, or MS number or even the name of the exploit itself. So to find this exploit either one of the commands will work:
+After metasploit runs, search for the exploit, mentioned above. The command to find is "search <name of exploit>" The name of exploit can be its CVE number, or MS number (Microsoft Security Bulletin number)  or even the name of the exploit itself. So to find this exploit either one of the commands will work:
 search CVE-2017-0144
 search ms17-010
 search Eternalblue
