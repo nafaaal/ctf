@@ -1,0 +1,13 @@
+Advent of Cyber - Ismail Nafaal Ibrahim - 17/6/2020
+
+Machine IP - 10.10.51.129
+
+
+First question is to find a hidden path of the web server.
+Options:
+gobuster, dirb, dirbuster
+
+These applications can be used to find directories of the webserver against a wordlist.
+
+Command : gobuster -w /usr/share/wordlists/dirbuster/x.txt -u http://10.10.51.129:3000 > gobuster/initial
+
