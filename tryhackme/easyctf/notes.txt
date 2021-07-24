@@ -1,4 +1,4 @@
-IP ADDRESS - 10.10.17.246
+	IP ADDRESS - 10.10.17.246
 
 
 Check all running ports of the given ip, -O (Detects the OS which is running), -sV (Determines the versions of services running)
