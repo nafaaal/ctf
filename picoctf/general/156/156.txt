@@ -1,0 +1,9 @@
+First save output into file 
+nc mercury.picoctf.net 7449 > FILE
+
+Then change the ascii values to text 
+awk '{ for(i=1;i<=NF;i++) printf("%c",$i); print "";  }'  FILE
+
+And to remove newlines, the output can be piped into sed command to remove newlines with blanks
+awk '{ for(i=1;i<=NF;i++) printf("%c",$i); print "";  }'  FILE  | sed ':a;N;$!ba;s/\n/+/g'
+

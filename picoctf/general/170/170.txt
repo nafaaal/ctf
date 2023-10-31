@@ -1,0 +1,3 @@
+Download the file and run it after giving execute permissions
+
+chmod u+x warm
